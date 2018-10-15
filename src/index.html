@@ -1,0 +1,48 @@
+{#each icons as icon (icon.sizes)}
+<link rel="{icon.rel}" sizes="{icon.sizes}" href="{icon.href}">
+{/each}
+<link rel="{manifest.rel}" href="{manifest.href}">
+<link rel="{favicon.rel}" href="{favicon.href}" />
+{#each meta as item (item.name)}
+<meta name="{item.rel}" content="{item.content}">
+{/each}
+
+<script>
+  export default {
+    data () {
+      return {
+        iconPath: '/images/favicon',
+        generate: {
+          apple: ['57', '60', '72', '76', '114', '120', '144', '152', '180'],
+          android: ['192'],
+          favicon: ['32', '96', '16']
+        }
+      }
+    },
+
+    computed: {
+      icons: ({ generate, iconPath }) => {
+        const apple = generate.apple.map(d => ({ rel: 'apple-touch-icon', sizes: `${d}x${d}`, href: `${iconPath}/apple-icon-${d}x${d}.png` }))
+        const android = generate.android.map(d => ({ rel: 'icon', type: 'image/png', sizes: `${d}x${d}`, href: `${iconPath}/android-icon-${d}x${d}.png` }))
+        const favicon = generate.favicon.map(d => ({ rel: 'icon', type: 'image/png', sizes: `${d}x${d}`, href: `${iconPath}/favicon-${d}x${d}.png` }))
+        return [].concat(apple, android, favicon)
+      },
+
+      manifest: ({ generate, iconPath }) => {
+        return { rel: 'manifest', href: `${iconPath}/manifest.json` }
+      },
+
+      favicon: ({ generate, iconPath }) => {
+        return { rel: 'icon', type: 'image/x-icon', href: `${iconPath}/favicon.ico` }
+      },
+
+      meta: ({ generate, iconPath }) => {
+        return [
+          { name: 'msapplication-TileColor', content: '#ffffff' },
+          { name: 'msapplication-TileImage', content: `${iconPath}/ms-icon-144x144.png` },
+          { name: 'theme-color', content: '#ffffff' }
+        ]
+      }
+    }
+  }
+</script>
